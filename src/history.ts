@@ -6,17 +6,25 @@ import {Plugin, Command, PluginKey, EditorState, Transaction, SelectionBookmark}
 // state, because ProseMirror supports applying changes without adding
 // them to the history (for example during collaboration).
 //
+// @cn ProseMirror 的历史并不只是简单的回滚到之前的 state，因为 ProseMirror 支持修改文档而不将它们添加到历史栈中（例如，在协同编辑时）。
+//
 // To this end, each 'Branch' (one for the undo history and one for
 // the redo history) keeps an array of 'Items', which can optionally
 // hold a step (an actual undoable change), and always hold a position
 // map (which is needed to move changes below them to apply to the
 // current document).
 //
+// @cn 为此，每个 「Branch」（一个用于撤销历史，一个用于重做历史）保存一个「Items」的数组，每个 Item 可选的持有一个 step（一个执行实际撤销操作的修改），
+// 并且总是持有一个位置 map（以用来将其后续的修改应用到当前文档中）。
+//
 // An item that has both a step and a selection bookmark is the start
 // of an 'event' — a group of changes that will be undone or redone at
 // once. (It stores only the bookmark, since that way we don't have to
 // provide a document until the selection is actually applied, which
 // is useful when compressing.)
+//
+// @cn 一个 item 同时有一个 step 和一个选区 bookmark，它是一个「事件」的开始 -- 即一组修改将会被一次性立即撤销或者重做。（它只存储 bookmark），
+// 因为这样的话在实际应用选区之前，我们就不需要提供一个文档，这在压缩时非常有用）。
 
 // Used to schedule history compression
 const max_empty_items = 500
